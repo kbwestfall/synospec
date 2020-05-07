@@ -1,7 +1,5 @@
 .. distribution
 
-#.. _pypi https://pypi.org/project/sdss-mangadap/
-
 .. core
 
 .. _glob.glob: https://docs.python.org/3/library/glob.html
