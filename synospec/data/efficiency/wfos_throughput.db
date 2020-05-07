@@ -1,0 +1,22 @@
+# Taken from Throughput_Fiber_vs_XChange_KB.xlsx
+# This is the consolidated throughput curve for both channels, not
+# including the detector QE
+#
+# Wavelength
+# (angstrom)  Throughput
+ 3100         0.242519685
+ 3200         0.321163016
+ 3500         0.558356506
+ 4000         0.547867311
+ 4500         0.530665367
+ 5000         0.653429661
+ 5500         0.508181792
+ 6000         0.544438652
+ 6500         0.709754243
+ 7000         0.622003457
+ 7500         0.428921151
+ 8000         0.532433763
+ 8500         0.673140489
+ 9000         0.686974599
+ 9500         0.589123182
+10000         0.450968783

@@ -1,0 +1,22 @@
+# Taken from table produced by Renate Kupke
+#   ASSUMES A 10m FIBER RUN!
+# TODO: Get data directly from Polymicro?
+# TODO: Data should be in dB/m as a function of wavelength?
+#
+#   Wavelength (angstrom)   Throughput
+                     3100       0.7079
+                     3200       0.7079
+                     3500       0.8511
+                     4000       0.9204
+                     4500       0.9462
+                     5000       0.9627
+                     5500       0.9727
+                     6000       0.9795
+                     6500       0.9817
+                     7000       0.9829
+                     7500       0.9863
+                     8000       0.9886
+                     8500       0.9908
+                     9000       0.9886
+                     9500       0.9817
+                    10000       0.9908

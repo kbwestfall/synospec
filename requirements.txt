@@ -1,0 +1,10 @@
+# Package dependencies of the Keck-FOBOS/enyo
+astropy>=4.0
+ipython>=7.7
+matplotlib>=3.2.0
+numpy>=1.18.1
+pydl>=0.7
+scipy>=1.4.1
+setuptools>=27.3
+shapely>=1.7.0
+

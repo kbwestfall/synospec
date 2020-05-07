@@ -1,0 +1,44 @@
+aperture.py:            :class:`~enyo.etc.source.Source` object, but the code
+aperture.py:            source (:class:`~enyo.etc.source.Source`):
+aperture.py:            :class:`~enyo.etc.source.Source` object, but the code
+aperture.py:            source (:class:`~enyo.etc.source.Source`):
+efficiency.py:    :class:`~enyo.etc.efficiency.Efficiency` object always returns
+efficiency.py:            an :class:`~enyo.etc.efficiency.Efficiency` object.
+efficiency.py:            :class:`~enyo.etc.efficiency.Efficiency` objects.
+efficiency.py:        :class:`~enyo.etc.efficiency.Efficiency` object.
+efficiency.py:        coupling (:class:`~enyo.etc.efficiency.Efficiency`, optional):
+efficiency.py:        fibers (:class:`~enyo.etc.efficiency.Efficiency`, optional):
+efficiency.py:        grating (:class:`~enyo.etc.efficiency.Efficiency`, optional):
+efficiency.py:        camera (:class:`~enyo.etc.efficiency.Efficiency`, optional):
+efficiency.py:        detector (:class:`~enyo.etc.efficiency.Efficiency`, optional):
+efficiency.py:        other (:class:`~enyo.etc.efficiency.Efficiency`, optional):
+efficiency.py:        spectrograph (:class:`~enyo.etc.efficiency.Efficiency`, optional):
+efficiency.py:        telescope (:class:`~enyo.etc.efficiency.Efficiency`, optional):
+extract.py:        detector (:class:`~enyo.etc.detector.Detector`):
+observe.py:        telescope (:class:`~enyo.etc.telescopes.Telescope`):
+observe.py:        sky_spectrum (:class:`~enyo.etc.spectrum.Spectrum`):
+observe.py:        spec_aperture (:class:`~enyo.etc.aperture.Aperture`):
+observe.py:        detector (:class:`~enyo.etc.detector.Detector`):
+observe.py:        system_throughput (:class:`~enyo.etc.efficiency.Efficiency`, optional):
+observe.py:        atmospheric_throughput (:class:`~enyo.etc.efficiency.Efficiency`, optional):
+observe.py:        onsky_source_distribution (:class:`~enyo.etc.source.Source`, optional):
+observe.py:        source_spectrum (:class:`~enyo.etc.spectrum.Spectrum`, optional):
+observe.py:        extraction (:class:`~enyo.etc.extract.Extraction`, optional):
+observe.py:            :class:`~enyo.etc.spectrum.Spectrum`: The simulated
+observe.py:            :class:`~enyo.etc.spectrum.Spectrum`: The S/N spectrum.
+observe.py:            WARNING: Here, :class:`~enyo.etc.spectrum.Spectrum` is
+observe.py:        sky (:class:`enyo.etc.source.OnSkySource`):
+observe.py:        spec_aperture (:class:`enyo.etc.aperture.Aperture`):
+observe.py:        spec_kernel (:class:`enyo.etc.kernel.SpectrographGaussianKernel`):
+observe.py:        onsky_source (:class:`enyo.etc.source.OnSkySource`, optional):
+spectrographs.py:        telescope (:class:`~enyo.etc.telescopes.Telescope`):
+spectrographs.py:        grating (:class:`~enyo.etc.vph.VPHGrating`):
+spectrographs.py:    :class:`~enyo.etc.detector.Detector` instance with the detector
+spectrographs.py:#            sky (:class:`enyo.etc.source.OnSkySource`):
+spectrographs.py:#            spec_aperture (:class:`enyo.etc.aperture.Aperture`):
+spectrographs.py:#            onsky_source (:class:`enyo.etc.source.OnSkySource`, optional):
+spectrographs.py:    :class:`~enyo.etc.vph.VPHGrating` instances available in the
+spectrographs.py:        from enyo.etc.spectrographs import WFOSGrating
+spectrum.py:            band (:class:`~enyo.etc.efficiency.FilterResponse`, optional):
+spectrum.py:            band (:class:`~enyo.etc.efficiency.FilterResponse`, optional):
+telescopes.py:        throughput (:obj:`float`, :class:`~enyo.etc.efficiency.Efficiency`, :class:`~enyo.etc.efficiency.CombinedEfficiency`, optional):

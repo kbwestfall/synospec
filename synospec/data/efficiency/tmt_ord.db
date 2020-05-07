@@ -1,0 +1,12 @@
+# TMT reflectivity requirements and goals from the ORD.  The ORD gives
+# the reflectivity for all 3 mirrors.  The reflectivity for each mirror
+# is just taken as the cube root.  Wavelength is in angstroms.
+# WAVE  REQ_TOT  GOAL_TOT  REQ_EACH  GOAL_EACH
+  3100     0.00      0.50     0.000      0.794
+  3399     0.00      0.50     0.000      0.794
+  3400     0.50      0.73     0.794      0.900
+  3600     0.50      0.73     0.794      0.900
+  4000     0.73      0.86     0.900      0.951
+  5000     0.86      0.94     0.951      0.980
+  7000     0.91      0.94     0.969      0.980
+280000     0.91      0.94     0.969      0.980
