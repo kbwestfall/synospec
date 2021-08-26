@@ -1,8 +1,0 @@
-#!/usr/bin/env python
-
-from synospec.scripts import fobos_etc
-import sys
-
-if __name__ == '__main__':
-    sys.exit(fobos_etc.main(fobos_etc.parse_args()))
-

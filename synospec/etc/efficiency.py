@@ -27,6 +27,8 @@ from scipy import interpolate
 
 from astropy import units
 
+from .. import data_file
+
 class Efficiency:
     r"""
     Base class for efficiency data.
@@ -81,7 +83,7 @@ class Efficiency:
             self._eta = None
     
     @classmethod
-    def from_file(cls, data_file, wave_units='angstrom'):
+    def from_file(cls, datafile, wave_units='angstrom'):
         """
         Read from an ascii file.
 
@@ -91,16 +93,16 @@ class Efficiency:
         `numpy.genfromtxt`_.
 
         Args:
-            data_file (:obj:`str`):
+            datafile (:obj:`str`):
                 Ascii file with the data.
             wave_units (:obj:`str`, optional):
                 Units of the wavelength in the file. Must be
                 interpretable by `astropy.units`_ and convertable to
                 angstroms.
         """
-        if not os.path.isfile(data_file):
-            raise FileNotFoundError('File does not exist: {0}'.format(data_file))
-        db = numpy.genfromtxt(data_file)
+        if not os.path.isfile(datafile):
+            raise FileNotFoundError('File does not exist: {0}'.format(datafile))
+        db = numpy.genfromtxt(datafile)
         return cls(db[:,1], wave=db[:,0]*units.Unit(wave_units).to('angstrom'))
 
     def __call__(self, wave):
@@ -269,17 +271,16 @@ class FiberThroughput(Efficiency):
             The fiber vendor. Currently this can only be 'polymicro'.
     """
     def __init__(self, fiber='polymicro'):
-        data_file = FiberThroughput.select_data_file(fiber)
-        if not os.path.isfile(data_file):
-            raise FileNotFoundError('No file: {0}'.format(data_file))
-        db = numpy.genfromtxt(data_file)
+        datafile = FiberThroughput.select_data_file(fiber)
+        if not os.path.isfile(datafile):
+            raise FileNotFoundError('No file: {0}'.format(datafile))
+        db = numpy.genfromtxt(datafile)
         super(FiberThroughput, self).__init__(db[:,1], wave=db[:,0])
 
     @staticmethod
     def select_data_file(fiber):
         if fiber == 'polymicro':
-            return os.path.join(os.environ['SYNOSPEC_DIR'], 'data', 'efficiency', 'fibers',
-                                'polymicro.db')
+            return str(data_file(filename='efficiency') / 'fibers' / 'polymicro.db')
         raise NotImplementedError('Unknown fiber type: {0}'.format(fiber))
 
 
@@ -298,11 +299,10 @@ class FilterResponse(Efficiency):
             available.
     """
     def __init__(self, band='g'):
-        data_file = os.path.join(os.environ['SYNOSPEC_DIR'], 'data', 'broadband_filters',
-                                 'gunn_2001_{0}_response.db'.format(band))
-        if not os.path.isfile(data_file):
-            raise FileNotFoundError('No file: {0}'.format(data_file))
-        db = numpy.genfromtxt(data_file)
+        dfile = data_file(filename='broadband_filters') / f'gunn_2001_{band}_response.db'
+        if not dfile.is_file():
+            raise FileNotFoundError(f'No file: {str(dfile)}')
+        db = numpy.genfromtxt(str(dfile))
         super(FilterResponse, self).__init__(db[:,1], wave=db[:,0])
 
 
@@ -319,8 +319,10 @@ class AtmosphericThroughput(Efficiency):
     """
     def __init__(self, airmass=1.0, location='maunakea'):
         if location == 'maunakea':
-            db = numpy.genfromtxt(os.path.join(os.environ['SYNOSPEC_DIR'], 'data', 'sky',
-                                  'mauna_kea_extinction.db'))
+            dfile = data_file(filename='sky') / 'mauna_kea_extinction.db'
+            if not dfile.is_file():
+                raise FileNotFoundError(f'No file: {str(dfile)}')
+            db = numpy.genfromtxt(str(dfile))
         else:
             raise NotImplementedError('Extinction unknown at {0}.'.format(location))
         self.airmass = airmass

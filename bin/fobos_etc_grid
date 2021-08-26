@@ -1,8 +1,0 @@
-#!/usr/bin/env python
-
-from synospec.scripts import fobos_etc_grid
-import sys
-
-if __name__ == '__main__':
-    sys.exit(fobos_etc_grid.main(fobos_etc_grid.parse_args()))
-

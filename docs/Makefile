@@ -20,9 +20,11 @@ clean:
 apirst:
 	SPHINX_APIDOC_OPTIONS=$(SPHINXAPIOPT) $(SPHINXAPI) --separate -o ./api ../synospec ../synospec/tests/* ../synospec/scripts/*
 
+htmlonly:
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
+
 html:
 	make apirst
-	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
-	@echo
-	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+	make htmlonly
+
 
