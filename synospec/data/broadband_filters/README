@@ -1,7 +1,7 @@
 # Response curves taken from:
 # http://www.sdss.org/wp-content/uploads/2017/04/filter_curves.fits
 # 
-# Extracted data are the 'wavelength' and 'respt' columns in each
+# Extracted data are the 'wavelength' and 'resnoa' columns in each
 # extension.  The wavelengths are assumed to be in vacuum.
 #
 # From the header of the fits file:

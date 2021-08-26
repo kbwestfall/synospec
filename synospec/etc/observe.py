@@ -170,7 +170,7 @@ class Observation:
         #     distribution; i.e., units are, e.g., erg/s/cm^2/angstrom
         self.wave = self.sky_spectrum.wave.copy()
         self.sres = self.sky_spectrum.sres.copy() if sky_spectrum.sres is not None \
-                        else (None if self.source_spectrum is None 
+                        else (None if self.source_spectrum.sres is None 
                                 else self.source_spectrum.sres.copy())
 
         self.atmospheric_throughput = atmospheric_throughput

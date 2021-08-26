@@ -34,6 +34,9 @@ def parse_args(options=None):
                         help='Input units of the flux density. Must be interpretable by '
                              'astropy.units.Unit.  Code assumes 1e-17 erg / (cm2 s angstrom) '
                              'if units are not provided.')
+    parser.add_argument('--ignore_mag', default=False, action='store_true',
+                        help='Ignore the provided magnitude of the source and use the provided '
+                             'spectrum directly.  Only valid if a spectrum is provided.')
 
     parser.add_argument('--spot_fwhm', default=5.8, type=float,
                         help='FHWM of the monochromatic spot size on the detector in pixels.')
@@ -176,10 +179,10 @@ def read_spectrum(spec_file, spec_wave, spec_wave_units, spec_flux, spec_flux_un
     return spec.resample(wave=wave, log=True)
 
 
-def get_spectrum(wave, mag, mag_band='g', mag_system='AB', spec_file=None, spec_wave=None,
-                 spec_wave_units=None, spec_flux=None, spec_flux_units=None, spec_res_indx=None,
-                 spec_res_value=None, spec_table=None, emline_db=None, redshift=0.0,
-                 resolution=3500):
+def get_spectrum(wave, mag, mag_band='g', mag_system='AB', ignore_mag=False, spec_file=None,
+                 spec_wave=None, spec_wave_units=None, spec_flux=None, spec_flux_units=None,
+                 spec_res_indx=None, spec_res_value=None, spec_table=None, emline_db=None,
+                 redshift=0.0, resolution=3500):
     """
     """
     spec = spectrum.ABReferenceSpectrum(wave, resolution=resolution, log=True) \
@@ -187,16 +190,18 @@ def get_spectrum(wave, mag, mag_band='g', mag_system='AB', spec_file=None, spec_
                 else read_spectrum(spec_file, spec_wave, spec_wave_units, spec_flux,
                                    spec_flux_units, spec_res_indx, spec_res_value, spec_table,
                                    wave, resolution)
-    broadband = efficiency.FilterResponse(band=mag_band)
-    spec.rescale_magnitude(mag, band=broadband, system=mag_system)
+    if not ignore_mag:
+        broadband = efficiency.FilterResponse(band=mag_band)
+        spec.rescale_magnitude(mag, band=broadband, system=mag_system)
     if emline_db is None:
         return spec
     spec = spectrum.EmissionLineSpectrum(wave, emline_db['flux'], emline_db['restwave'],
                                          emline_db['fwhm'], units=emline_db['fwhmu'],
                                          redshift=redshift, resolution=resolution, log=True,
                                          continuum=spec.flux)
-    warnings.warn('Including emission lines, spectrum broadband magnitude changed '
-                  'from {0} to {1}.'.format(mag, spec.magnitude(band=broadband)))
+    if not ignore_mag:
+        warnings.warn('Including emission lines, spectrum broadband magnitude changed '
+                      'from {0} to {1}.'.format(mag, spec.magnitude(band=broadband)))
     return spec
 
 
@@ -264,8 +269,9 @@ def main(args):
     wavelengths = [3100,10000,dw]
     wave = get_wavelength_vector(wavelengths[0], wavelengths[1], wavelengths[2])
     emline_db = None if args.emline is None else read_emission_line_database(args.emline)
+    ignore_mag = args.ignore_mag and args.spec_file is not None
     spec = get_spectrum(wave, args.mag, mag_band=args.mag_band, mag_system=args.mag_system,
-                        spec_file=args.spec_file, spec_wave=args.spec_wave,
+                        ignore_mag=ignore_mag, spec_file=args.spec_file, spec_wave=args.spec_wave,
                         spec_wave_units=args.spec_wave_units, spec_flux=args.spec_flux,
                         spec_flux_units=args.spec_flux_units, spec_res_indx=args.spec_res_indx,
                         spec_res_value=args.spec_res_value, spec_table=args.spec_table,
@@ -375,6 +381,7 @@ def main(args):
 
         pyplot.show()
 
+    print(fiber.area)
     # Report
     g = efficiency.FilterResponse(band='g')
     r = efficiency.FilterResponse(band='r')
@@ -383,19 +390,19 @@ def main(args):
     print('{0:^70}'.format('FOBOS S/N Calculation (v0.2)'))
     print('-'*70)
     print('Compute time: {0} seconds'.format(time.perf_counter() - t))
-    print('Object g- and r-band AB magnitude: {0:.1f} {1:.1f}'.format(
-                    spec.magnitude(band=g), spec.magnitude(band=r)))
-    print('Sky g- and r-band AB surface brightness: {0:.1f} {1:.1f}'.format(
-                    sky_spectrum.magnitude(band=g), sky_spectrum.magnitude(band=r)))
+    print('Object g- and r-band AB magnitude: {0:.3f} {1:.3f} {2:.3f}'.format(
+                    spec.magnitude(band=g), spec.magnitude(band=r), spec.magnitude(band=iband)))
+    print('Sky g- and r-band AB surface brightness: {0:.3f} {1:.3f} {2:.3f}'.format(
+                    sky_spectrum.magnitude(band=g), sky_spectrum.magnitude(band=r), sky_spectrum.magnitude(band=iband)))
     print('Exposure time: {0:.1f} (s)'.format(args.time))
     if not args.uniform:
         print('Aperture Loss: {0:.1f}%'.format((1-obs.aperture_factor)*100))
     print('Extraction Loss: {0:.1f}%'.format((1-obs.extraction.spatial_efficiency)*100))
-    print('Median {0}: {1:.1f}'.format(snr_label, numpy.median(snr.flux)))
-    print('g-band weighted mean {0} {1:.1f}'.format(snr_label,
+    print('Median {0}: {1:.3f}'.format(snr_label, numpy.median(snr.flux)))
+    print('g-band weighted mean {0} {1:.3f}'.format(snr_label,
                 numpy.sum(g(snr.wave)*snr.flux)/numpy.sum(g(snr.wave))))
-    print('r-band weighted mean {0} {1:.1f}'.format(snr_label,
+    print('r-band weighted mean {0} {1:.3f}'.format(snr_label,
                 numpy.sum(r(snr.wave)*snr.flux)/numpy.sum(r(snr.wave))))
-    print('i-band weighted mean {0} {1:.1f}'.format(snr_label,
+    print('i-band weighted mean {0} {1:.3f}'.format(snr_label,
                 numpy.sum(iband(snr.wave)*snr.flux)/numpy.sum(iband(snr.wave))))
 
