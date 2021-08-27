@@ -208,8 +208,8 @@ class OnSkyGaussian(functional_models.Gaussian2D, Source):
     Args:
         fwhm (scalar-like):
             The FWHM of the Gaussian in *arcseconds*.
-        center (scalar-like, optional):
-            The coordinates of the Gaussian center in *arcseconds*.
+        center (array-like, optional):
+            The two coordinates of the Gaussian center in *arcseconds*.
         ellipticity (scalar-like, optional):
             The ellipticity (1-b/a) of an elliptical Gaussian
             distribution.
@@ -275,6 +275,68 @@ class OnSkyGaussian(functional_models.Gaussian2D, Source):
         arcseconds.  Currently :math:`2\ {\rm FWHM}`.
         """
         return self.fwhm*2.
+
+
+# TODO: Allow this to have an ellipticity and position angle?
+class OnSkyMoffat(functional_models.Moffat2D, Source):
+    """
+    An on-sky Moffat distribution.
+
+    Args:
+        fwhm (scalar-like):
+            The FWHM of the Moffat in *arcseconds*.
+        beta (scalar-like):
+            The power-law index for the Moffat tails (called alpha by astropy)
+        center (array-like, optional):
+            The two coordinates of the Moffat center in *arcseconds*.
+        sampling (scalar-like, optional):
+            Sampling of a generated map in arcseconds per pixel.
+            Default is set by :func:`minimum_sampling`.
+        size (scalar-like, optional):
+            Size of the image to generate of the distribution in
+            *arceconds* along one of the axes.  The map is square.
+            Default is defined by :func:`minimum_size`.
+    """
+    def __init__(self, fwhm, beta, center=None, sampling=None, size=None):
+
+        # Define internals
+        self._fwhm = float(fwhm)
+        alpha = float(beta)
+        gamma = self._fwhm / 2 / numpy.sqrt(2**(1/alpha)-1)
+
+        # Instantiate the functional_models.Gaussian2D object
+        super(OnSkyMoffat, self).__init__(amplitude=(alpha-1)/numpy.pi/gamma**2,
+                         x_0=0 if center is None else center[0],
+                         y_0=0 if center is None else center[1], gamma=gamma, alpha=alpha)
+
+        # Set the integral to be normalized
+        self.integral = 1.0
+
+        # Set the map sampling and size
+        self.sampling = sampling
+        self.size = size
+
+        # Set the map if requested
+        if sampling is not None or size is not None:
+            self.make_map()
+
+    def get_integral(self):
+        """Return the analytic integral of the source."""
+        return self.amplitude * numpy.pi * self.gamma**2 / (self.alpha - 1)
+
+    def minimum_sampling(self):
+        r"""
+        Return the minimum sampling in arcseconds per pixels.  Currently
+        :math:`{\rm FWHM}/2`.
+        """
+        return self._fwhm/2.
+
+    def minimum_size(self):
+        r"""
+        The minimum size that should be used for the distribution map in
+        arcseconds.  Currently :math:`2\ {\rm FWHM}`.
+        """
+        return self._fwhm*2.
 
 
 class OnSkySersic(functional_models.Sersic2D, Source):

@@ -18,6 +18,7 @@ import os
 import numpy
 
 from . import efficiency
+from .. import data_file
 
 # TODO: Define a `TelescopePort` or `TelescopeFocalPlane` class that
 # holds the f-ratio, platescale, and throughput information, and allow
@@ -110,7 +111,7 @@ class KeckTelescope(Telescope):
         platescale = 0.725
         # Assumes the Nasymth port for the throughput; three
         # reflections off an aluminum coating.
-        eta_file = os.path.join(os.environ['SYNOSPEC_DIR'], 'data', 'efficiency', 'aluminum.db')
+        eta_file = str(data_file(filename='efficiency') / 'aluminum.db')
         single_reflection = efficiency.Efficiency.from_file(eta_file)
         throughput = efficiency.CombinedEfficiency(dict([(key,single_reflection)
                                                          for key in ['m1', 'm2', 'm3']]))
@@ -157,7 +158,7 @@ class TMTTelescope(Telescope):
 #        eta_file = os.path.join(os.environ['SYNOSPEC_DIR'], 'data', 'efficiency',
 #                                'uv_enhanced_silver.db')
 #        single_reflection = efficiency.Efficiency.from_file(eta_file)
-        eta_file = os.path.join(os.environ['SYNOSPEC_DIR'], 'data', 'efficiency', 'tmt_ord.db')
+        eta_file = str(data_file(filename='efficiency') / 'tmt_ord.db')
         db = numpy.genfromtxt(eta_file)
         c = 3 if reflectivity == 'req' else 4
         single_reflection = efficiency.Efficiency(db[:,c], wave=db[:,0]) 

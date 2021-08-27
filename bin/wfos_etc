@@ -1,8 +1,0 @@
-#!/usr/bin/env python
-
-from synospec.scripts import wfos_etc
-import sys
-
-if __name__ == '__main__':
-    sys.exit(wfos_etc.main(wfos_etc.parse_args()))
-

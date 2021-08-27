@@ -32,6 +32,8 @@ from ..util.lineprofiles import IntegratedGaussianLSF
 from .sampling import Resample
 from .resolution import match_spectral_resolution
 
+from .. import data_file
+
 def spectral_coordinate_step(wave, log=False, base=10.0):
     """
     Return the sampling step for the input wavelength vector.
@@ -1253,8 +1255,7 @@ class BlueGalaxySpectrum(Spectrum):
     An example blue galaxy spectrum pulled from the MaNGA survey.
     """
     def __init__(self, redshift=0.0):
-        fitsfile = os.path.join(os.environ['SYNOSPEC_DIR'],
-                                'data/galaxy/blue_galaxy_8329-6104.fits')
+        fitsfile = str(data_file(filename='galaxy') / 'blue_galaxy_8329-6104.fits')
         hdu = fits.open(fitsfile)
         wave = hdu['WAVE'].data * (1+redshift)
         flux = hdu['FLUX'].data
@@ -1271,7 +1272,7 @@ class RedGalaxySpectrum(Spectrum):
     An example red galaxy spectrum pulled from the MaNGA survey.
     """
     def __init__(self, redshift=0.0):
-        fitsfile = os.path.join(os.environ['SYNOSPEC_DIR'], 'data/galaxy/red_galaxy_8131-6102.fits')
+        fitsfile = str(data_file(filename='galaxy') / 'red_galaxy_8131-6102.fits')
         hdu = fits.open(fitsfile)
         wave = hdu['WAVE'].data * (1+redshift)
         flux = hdu['FLUX'].data
@@ -1301,7 +1302,7 @@ class MaunakeaSkySpectrum(Spectrum):
     provided by Chuck Steidel.
     """
     def __init__(self):
-        fitsfile = os.path.join(os.environ['SYNOSPEC_DIR'], 'data/sky/lris_esi_skyspec_fnu.fits')
+        fitsfile = str(data_file(filename='sky') / 'lris_esi_skyspec_fnu.fits')
         init = Spectrum.from_fits(fitsfile, waveext='WCS', fluxext=0, airwave=True,
                                   use_sampling_assessments=True)
         init.regular = False
@@ -1362,7 +1363,7 @@ class VegaSpectrum(Spectrum):
     def __init__(self, waverange=None):
         if waverange is not None and numpy.asarray(waverange).size != 2:
             raise ValueError('Wavelength range must be a two-element list, tuple, etc.')
-        fitsfile = os.path.join(os.environ['SYNOSPEC_DIR'], 'data/spectra/alpha_lyr_stis_009.fits')
+        fitsfile = str(data_file(filename='spectra') / 'alpha_lyr_stis_009.fits')
         hdu = fits.open(fitsfile)
         indx = numpy.ones(hdu[1].data['WAVELENGTH'].size, dtype=bool) if waverange is None \
                     else (hdu[1].data['WAVELENGTH'] > waverange[0]) \
