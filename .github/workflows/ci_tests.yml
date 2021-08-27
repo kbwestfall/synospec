@@ -7,9 +7,6 @@ on:
     - main
     - develop
   pull_request:
-    branches:
-    - main
-    - develop
 
 env:
   SETUP_XVFB: True  # avoid issues if something tries to open a GUI window
