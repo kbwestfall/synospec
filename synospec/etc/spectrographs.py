@@ -21,6 +21,7 @@ from IPython import embed
 import numpy
 
 from . import telescopes, observe, kernel, detector, efficiency, vph
+from .. import data_file
 
 # from . import telescopes, observe, kernel, detector, efficiency, optical
 
@@ -735,8 +736,7 @@ class TMTWFOSBlue(TMTWFOSArm):
     focal_length_cam = 600.
     max_field_angle_cam = 12.
 
-    base_file = os.path.join(os.environ['SYNOSPEC_DIR'], 'data', 'efficiency',
-                             'wfos_blue_efficiency.db')
+    base_file = str(data_file(filename='efficiency') / 'wfos_blue_efficiency.db')
     """
     The file containing tabulated efficiency data for the elements
     of the spectrograph arm, excluding the grating.
@@ -762,8 +762,7 @@ class TMTWFOSRed(TMTWFOSArm):
     focal_length_cam = 600.
     max_field_angle_cam = 12.
 
-    base_file = os.path.join(os.environ['SYNOSPEC_DIR'], 'data', 'efficiency',
-                             'wfos_red_efficiency.db')
+    base_file = str(data_file(filename='efficiency') / 'wfos_red_efficiency.db')
     """
     The file containing tabulated efficiency data for the elements
     of the spectrograph arm, excluding the grating.

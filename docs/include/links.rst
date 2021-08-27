@@ -79,5 +79,9 @@
 .. _shapely.geometry.polygon.Polygon: https://shapely.readthedocs.io/en/latest/manual.html#polygons
 .. _shapely.buffer: https://shapely.readthedocs.io/en/latest/manual.html#object.representative_point
 
+.. misc
+
+.. _SDSS bitmasks: https://www.sdss.org/dr16/algorithms/bitmasks/
+.. _SDSS-style parameter file: http://www.sdss.org/dr16/software/par/
 
 

@@ -1,137 +1,65 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-# K. Westfall, 22 May 2018
-#   Adapted from Marvin's setup.py file
+#!/usr/bin/env python
+# Licensed under a 3-clause BSD style license - see LICENSE.rst
 
-# Imports
+# NOTE: The configuration for the package, including the name, version, and
+# other information are set in the setup.cfg file.
+
 import os
-import glob
-from setuptools import setup, find_packages
+import sys
 
-import requests
-import warnings
+from setuptools import setup
 
-VERSION = '0.1.0dev'
-RELEASE = 'dev' not in VERSION
-MINIMUM_PYTHON_VERSION = '3.5'
+from extension_helpers import get_extensions
 
-def get_package_data(root='synospec'):
-    """Generate the list of package data."""
-    return [os.path.relpath(f, root) 
-                    for f in glob.glob(os.path.join(root, 'data/*/*'))] \
-           + [os.path.relpath(f, root) 
-                    for f in glob.glob(os.path.join(root, 'data/README.md'))]
+# First provide helpful messages if contributors try and run legacy commands
+# for tests or docs.
 
-#def get_data_files():
-#    """Generate the list of data files."""
-#    data_files = []
-#    data_roots = [ 'data' ]
-#    for root in data_roots:
-#        for path, directories, files in os.walk(root):
-#            for f in files:
-#                data_path = '/'.join(path.split('/')[1:])
-#                data_files.append(os.path.join(data_path, f))
-#    return data_files
+TEST_HELP = """
+Note: running tests via 'python setup.py test' is now deprecated. The recommended method
+is to run:
 
+    tox -e test-alldeps
 
-def get_scripts():
-    """ Grab all the scripts in the bin directory.  """
-    scripts = []
-    if os.path.isdir('bin'):
-        scripts = [ fname for fname in glob.glob(os.path.join('bin', '*')) ]
-    return scripts
+The Python version can also be specified, e.g.:
 
+    tox -e py38-test-alldeps
 
-def get_requirements():
-    """ Get the package requirements from the system file. """
-    requirements_file = os.path.join(os.path.dirname(__file__), 'requirements.txt')
-    install_requires = [line.strip().replace('==', '>=') for line in open(requirements_file)
-                        if not line.strip().startswith('#') and line.strip() != '']
-    return install_requires
+You can list all available environments by doing:
 
+    tox -a
 
-def run_setup(package_data, scripts, packages, install_requires):
+If you don't already have tox installed, you can install it by doing:
 
-    setup(name='synospec',
-          version=VERSION,
-          license='BSD3',
-          description='Synthetic Observatory Spectrum',
-          long_description=open('README.md').read(),
-          author='Kyle B. Westfall',
-          author_email='westfall@ucolick.org',
-          keywords='astronomy spectroscopy',
-          url='https://github.com/kbwestfall/synospec',
-          python_requires='>='+MINIMUM_PYTHON_VERSION,
-          packages=packages,
-          package_dir={'synospec': 'synospec'},
-          package_data={'synospec': package_data},
-          include_package_data=True,
-          install_requires=install_requires,
-          scripts=scripts,
-          setup_requires=[ 'pytest-runner' ],
-          tests_require=[ 'pytest' ],
-          classifiers=[
-              'Development Status :: 4 - Beta',
-              'Intended Audience :: Science/Research',
-              'License :: OSI Approved :: BSD License',
-              'Natural Language :: English',
-              'Operating System :: OS Independent',
-              'Programming Language :: Python',
-              'Programming Language :: Python :: 3.7',
-              'Programming Language :: Python :: 3 :: Only',
-              'Topic :: Documentation :: Sphinx',
-              'Topic :: Scientific/Engineering :: Astronomy',
-              'Topic :: Software Development :: Libraries :: Python Modules'
-          ])
+    pip install tox
 
-#def default_paths():
-#    return { 'MANGADRP_VER': _MANGADRP_VER,
-#             'MANGA_SPECTRO_REDUX': os.path.join(os.environ['HOME'], 'MaNGA', 'redux'),
-#             'MANGADAP_VER': _VERSION,
-#             'MANGA_SPECTRO_ANALYSIS': os.path.join(os.environ['HOME'], 'MaNGA', 'analysis'),
-#             'MANGACORE_VER': _MANGACORE_VER,
-#             'MANGACORE_DIR': os.path.join(os.environ['HOME'], 'MaNGA', 'core', _MANGACORE_VER)
-#           }
-#
-#def check_environment():
-#    ev = default_paths()
-#    for k in ev.keys():
-#        if k not in os.environ:
-#            warnings.warn('{0} environmental variable undefined.  Default is: {1}'.format(k,ev[k]))
-#
-#
-#def short_warning(message, category, filename, lineno, file=None, line=None):
-#    """
-#    Return the format for a short warning message.
-#    """
-#    return ' %s: %s\n' % (category.__name__, message)
+If you want to run all or part of the test suite within an existing environment,
+you can use pytest directly:
 
+    pip install -e .[dev]
+    pytest
 
-#-----------------------------------------------------------------------
-if __name__ == '__main__':
+For more information, see:
 
-#    warnings.formatwarning = short_warning
+  http://docs.astropy.org/en/latest/development/testguide.html#running-tests
+"""
 
-    # Compile the data files to include
-#    data_files = get_data_files()
+if 'test' in sys.argv:
+    print(TEST_HELP)
+    sys.exit(1)
 
-    # Get the package data (data inside the main product root)
-    package_data = get_package_data()
+VERSION_TEMPLATE = """
+# Note that we need to fall back to the hard-coded version if either
+# setuptools_scm can't be imported or setuptools_scm can't determine the
+# version, so we catch the generic 'Exception'.
+try:
+    from setuptools_scm import get_version
+    version = get_version(root='..', relative_to=__file__)
+except Exception:
+    version = '{version}'
+""".lstrip()
 
-    # Compile the scripts in the bin/ directory
-    scripts = get_scripts()
+setup(use_scm_version={'write_to': os.path.join('synospec', 'version.py'),
+                       'write_to_template': VERSION_TEMPLATE},
+      ext_modules=get_extensions())
 
-    # Get the packages to include
-    packages = find_packages()
-
-    # Collate the dependencies based on the system text file
-    install_requires = get_requirements()
-
-    # Run setup from setuptools
-#    run_setup(data_files, scripts, packages, install_requires)
-    run_setup(package_data, scripts, packages, install_requires)
-
-#    # Check if the environmental variables are found and warn the user
-#    # of their defaults
-#    check_environment()
 
