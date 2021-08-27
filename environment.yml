@@ -1,0 +1,17 @@
+name: synospec
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.7
+  - IPython>=7.26
+  - pip
+  - numpy>=1.21
+  - scipy>=1.7
+  - matplotlib>=3.4
+  - astropy>=4.3
+  - extension-helpers>=0.1
+  - pydl>=0.7
+  - shapely>=1.7.0
+  - pytest>=6.2
+  - setuptools>=46.4
+
