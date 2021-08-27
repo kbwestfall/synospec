@@ -82,6 +82,6 @@ jobs:
         python -m pip install pycodestyle
     - name: Check for runtime errors using pycodestyle
       run: |
-        pycodestyle pypeit --count --select=E9
+        pycodestyle synospec --count --select=E9
 
 
