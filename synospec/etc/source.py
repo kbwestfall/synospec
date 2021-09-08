@@ -457,6 +457,10 @@ class OnSkySource(Source):
             e.g., 10^-17 erg/s/cm^2/angstrom) or an object. If a
             :class:`Source` object, the object is used to generate a
             map of the source surface-brightness distribution.
+        beta (:obj:`float`, optional):
+            The beta for the Moffat function.  If None, use a Gaussian seeing
+            distribution.  If seeing is a :class:`Source` object, this is
+            ignored.
         sampling (scalar-like, optional):
             Sampling of a generated map in arcseconds per pixel.
             Default is set by :func:`minimum_sampling`.
@@ -465,11 +469,12 @@ class OnSkySource(Source):
             *arceconds* along one of the axes.  The map is square.
             Default is defined by :func:`minimum_size`.
     """
-    def __init__(self, seeing, intrinsic, sampling=None, size=None):
+    def __init__(self, seeing, intrinsic, beta=None, sampling=None, size=None):
 
-        # The seeing kernel
-        self.seeing = OnSkyGaussian(seeing) if isinstance(seeing, float) else seeing
-        # TODO: Make sure seeing object has unity integral!
+        if isinstance(seeing, float):
+            self.seeing = OnSkyGaussian(seeing) if beta is None else OnSkyMoffat(seeing, beta)
+        else:
+            self.seeing = seeing
 
         # The intrinsic source distribution
         self.intrinsic = intrinsic

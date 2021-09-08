@@ -3,6 +3,8 @@ from astropy.io import fits
 
 hdu = fits.open('filter_curves.fits')
 
+# WARNING: These filter curves include the telescope and detectors!
+
 for band in ['U', 'G', 'R', 'I', 'Z']:
     data_file = 'gunn_2001_{0}_response.db'.format(band.lower())
 

@@ -84,4 +84,6 @@
 .. _SDSS bitmasks: https://www.sdss.org/dr16/algorithms/bitmasks/
 .. _SDSS-style parameter file: http://www.sdss.org/dr16/software/par/
 
+.. _Submit an issue: https://github.com/kbwestfall/synospec/issues
+
 

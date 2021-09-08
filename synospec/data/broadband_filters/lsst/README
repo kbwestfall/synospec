@@ -1,0 +1,10 @@
+Filter curves taken from
+
+https://github.com/lsst-pst/syseng_throughputs.git
+
+specifically
+
+syseng_throughputs/components/camera/filters/*.dat
+
+These are *filter-only* transmission curves, unlike the SDSS curves.
+
