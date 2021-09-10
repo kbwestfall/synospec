@@ -1,8 +1,9 @@
 
-0.1.1.dev
----------
+0.1.1 (10 Sep 2021)
+-------------------
 
 - Finish (rough) imaging ETC
+- Release for Keck Science Meeting
 
 
 0.1.0 (27 Aug 2021)
