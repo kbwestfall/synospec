@@ -1,3 +1,6 @@
+.. include links
+.. include:: include/links.rst
+
 Welcome to SynOSpec
 ===================
 
@@ -42,7 +45,8 @@ The code is still in early development.
    :maxdepth: 1
 
    installation
-   scripts
+   fobos_etc
+   wfos_etc
 
 ----
 
@@ -69,8 +73,4 @@ Search
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-
-.. include links
-.. include:: include/links.rst
 

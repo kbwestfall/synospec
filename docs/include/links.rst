@@ -1,4 +1,13 @@
-.. distribution
+
+.. python
+
+.. _python.org: https://www.python.org/
+.. _anaconda: https://www.anaconda.com/products/individual
+.. _conda: https://docs.conda.io/projects/conda/en/latest/index.html
+.. _Conda Environments: https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html
+.. _virtualenv: https://virtualenv.pypa.io/en/latest/
+.. _pyenv: https://github.com/pyenv/pyenv
+
 
 .. core
 
