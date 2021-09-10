@@ -1,69 +1,91 @@
+
+.. include:: include/links.rst
+
+.. _install:
+
 Installation
 ============
-
-Clone the repo
---------------
-
-To download the software and associated data, clone the `GitHub repo
-<https://github.com/kbwestfall/synospec>`_ by executing:
-
-    .. code-block:: bash
-
-        git clone https://github.com/kbwestfall/synospec.git
-
-This will create an ``synospec`` directory in the current directory.
 
 Install Python 3
 ----------------
 
-``synospec`` is supported for Python 3 only. To install Python, you can
-do so along with a full package manager, like `Anaconda
-<https://www.continuum.io/DOWNLOADS>`_, or you can install python 3
-directly from `python.org <https://www.python.org/>`_.
+SynOSpec is supported for Python 3 only. To install Python, you can do so along
+with a full package manager, like `Anaconda`_, or you can install python 3
+directly from `python.org`_.
 
+Python environment
+------------------
 
-Install the code
-----------------
+We strongly recommend you setup a fresh python environment for installation and
+use of SynOSpec.  See, for example:
 
-To install ``synospec``, do one or more of the following (always from
-within the top-level directory of the repo):
+ - `Anaconda`_, specifically `Conda Environments`_
+ - `virtualenv`_
+ - `pyenv`_
 
- * To perform an environment-level installation, run:
+Clone the repo
+--------------
 
-    .. code-block:: bash
+To download the software and associated data, clone the GitHub repo by
+executing:
 
-        python3 setup.py install
+    .. code-block:: console
 
- * On MacOSX, you may need to run:
+        git clone https://github.com/kbwestfall/synospec.git
 
-    .. code-block:: bash
+This will create a new ``synospec`` directory in the directory where the command
+is executed.
 
-        CC=clang python3 setup.py install
+Install from source
+-------------------
 
- * To install ``synospec`` such that changes you make to the repo are
-   immediately available in your environment, run:
+The preferred method to install ``synospec`` and ensure its dependencies are
+met is to, from the top-level directory, run:
 
-    .. code-block:: bash
+.. code-block:: console
 
-        python3 setup.py develop
+    pip install -e .
 
- * To install ``synospec`` and ensure its dependencies are met, you can run:
+Importantly, note that this will upgrade/install SynOSpec python package
+dependencies, which is why it's useful to isolate the code to its own
+environment.  To include the development dependencies, run:
 
-    .. code-block:: bash
+.. code-block:: console
 
-        pip3 install -e .
+    pip install -e ".[dev]"
 
- * To install only the dependencies, run:
+Note that use of the quotes is shell dependent; e.g., you need them for zshell
+(the current default Mac shell), but they'll cause a fault in bash.
 
-    .. code-block:: bash
+Installation in this way should also means that changes made to the code
+should take effect immediately when re-running code.
 
-        pip3 install -r requirements.txt
+Uninstall
+---------
+
+Installation via pip is preferred because it eases uninstalling the code:
+
+.. code-block:: console
+    
+    pip uninstall synospec
+
+----
+
+Test your installation
+----------------------
+
+If you've installed with the developer dependencies, you can test the
+installation using ``pytest``:
+
+.. code-block:: console
+
+    cd synospec/tests
+    pytest . -W ignore
+
 
 Problems?
 ---------
 
-We have limited support to offer installation help. However, if you
-have problems, particularly those that you think may be a more
-general problem, please `submit an issue
-<https://github.com/kbwestfall/synospec/issues>`_.
+If you have problems, particularly those that you think may be a more general
+problem, please `Submit an issue`_.
 

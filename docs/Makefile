@@ -19,6 +19,7 @@ clean:
 
 apirst:
 	SPHINX_APIDOC_OPTIONS=$(SPHINXAPIOPT) $(SPHINXAPI) --separate -o ./api ../synospec ../synospec/tests/* ../synospec/scripts/*
+	python ./scripts/write_script_help.py
 
 htmlonly:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

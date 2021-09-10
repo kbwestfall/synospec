@@ -299,11 +299,12 @@ class FilterResponse(Efficiency):
             available.
     """
     def __init__(self, band='g'):
-        dfile = data_file(filename='broadband_filters') / f'gunn_2001_{band}_response.db'
+#        dfile = data_file(filename='broadband_filters') / f'gunn_2001_{band}_response.db'
+        dfile = data_file(filename='broadband_filters') / 'lsst' / f'{band}_band_Response.dat'
         if not dfile.is_file():
             raise FileNotFoundError(f'No file: {str(dfile)}')
         db = numpy.genfromtxt(str(dfile))
-        super(FilterResponse, self).__init__(db[:,1], wave=db[:,0])
+        super(FilterResponse, self).__init__(db[:,1], wave=db[:,0]*10)
 
 
 class AtmosphericThroughput(Efficiency):
