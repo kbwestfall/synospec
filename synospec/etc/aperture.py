@@ -491,6 +491,12 @@ class FiberAperture(Aperture):
         super(FiberAperture, self).__init__(Point(cx,cy).buffer(d/2, **kw))
 
 
+# A hack the just creates a pseudonym for the FiberAperture
+class CircularAperture(FiberAperture):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+
 class SlitAperture(Aperture):
     """
     Define a slit aperture.
