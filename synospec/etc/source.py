@@ -429,7 +429,6 @@ class OnSkySersic(functional_models.Sersic2D, Source):
 #class OnSkyImage:
 #    def __init__(self, fitsfile):
 
-# TODO: Add a Moffat distribution
 
 class OnSkySource(Source):
     """

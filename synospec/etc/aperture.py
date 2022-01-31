@@ -102,6 +102,47 @@ def point_inside_polygon(polygon, point):
     return numpy.absolute(polygon_winding_number(polygon, point)) == 1
 
 
+def hexagon_vertices(d=1., incircle=False):
+    r"""
+    Construct the vertices of a hexagon.
+
+    The long axis of the hexagon is always oriented along the Cartesian
+    :math:`x` axis.
+
+    Args:
+        d (:obj:`float`, optional):
+            The diameter of circumscribed circle.
+        incircle (:obj:`bool`, optional):
+            Use the provided diameter to set the incircle of the hexagon
+            instead of its circumscribed circle.
+
+    Returns:
+        `numpy.ndarray`_: An array with shape :math:`(6,2)`, providing the x
+        and y Cartesian vertices of the hexagon.
+    """
+    # Get the incircle radius
+    r = d/2/numpy.cos(numpy.pi/6) if incircle else d/2 
+    # Generate each vertex, in clockwise order, using a brute force approach.
+    v = numpy.zeros((6,2), dtype=float)
+    sina = numpy.sin(numpy.pi/3.0)
+
+    v[0,0] = -r/2
+    v[1,0] = r/2
+    v[2,0] = r
+    v[3,0] = r/2
+    v[4,0] = -r/2
+    v[5,0] = -r
+
+    v[0,1] = r * sina
+    v[1,1] = r * sina
+    v[2,1] = 0.
+    v[3,1] = -r * sina
+    v[4,1] = -r * sina
+    v[5,1] = 0.
+    
+    return v
+
+
 class Aperture:
     """
     Abstract class for a general aperture shape.
@@ -549,5 +590,66 @@ class SlitAperture(Aperture):
                                         numpy.repeat(y,2)).reshape(2,4).T)
         # rotate() function is provided by shapely.affinity package
         super(SlitAperture, self).__init__(rotate(square, rotation))
+
+
+class HexagonalAperture(Aperture):
+    """
+    Define a hexagonal aperture.
+
+    Note that the units for the center and diameter are only relevant in the
+    application of the aperture to a source. They should typically be in
+    arcseconds, with the center being relative to the source to observe.
+
+    Args:
+        cx (scalar-like):
+            Center X coordinate, typically 0.
+        cy (scalar-like):
+            Center Y coordinate, typically 0.
+        d (:obj:`float`):
+            The diameter of circumscribed circle.
+        incircle (:obj:`bool`, optional):
+            Use the provided diameter to set the incircle of the hexagon
+            instead of its circumscribed circle.
+        orientation (:obj:`str`, :obj:`float`, optional):
+            Sets the orientation of the hexagon, must be either
+            'horizontal', 'vertical', or a rotation angle in degrees
+            relative to the horizontal orientation.  The horizontal and
+            vertical orientations set the long axis of the hexagon along
+            the Cartesian x and y axis, respectively.  The horizontal
+            orientation is equivalent to a rotation angle of 0 and a
+            vertical orientation is equivalent to a rotation angle of 30
+            degrees.  While the polar-coordinate ordering of the
+            vertices in the output array will change, note the shape
+            is degenerate with a periodicity of 60 degrees.
+
+    Attributes:
+        center (:obj:`list`):
+            Center x and y coordinate.
+        width (:obj:`float`):
+            Slit width
+        length (:obj:`float`):
+            Slit length
+        rotation (:obj:`float`):
+            Slit rotation (deg)
+    """
+    def __init__(self, cx, cy, d, incircle=False, orientation='horizontal'):
+
+        self.center = numpy.array([cx,cy])
+        if orientation == 'horizontal':
+            self.rotation = 0.
+        elif orientation == 'vertical':
+            self.rotation = 90.
+        elif not isinstance(orientation, (int, float, numpy.integer, numpy.floating)):
+            self.rotation = orientation
+        else:
+            raise ValueError('Orientation must be "horizontal", "vertical", or a numerical '
+                             f'rotation in degrees.  Cannot interpret {orientation}.')
+
+        hexv = hexagon_vertices(d=d, incircle=incircle)
+        hexv[:,0] += cx
+        hexv[:,1] += cy
+        hexv = asPolygon(hexv)
+        # rotate() function is provided by shapely.affinity package
+        super().__init__(rotate(hexv, self.rotation))
 
 
