@@ -109,14 +109,14 @@ class KeckTelescope(Telescope):
         # This assumes the f/15 secondary
         fratio = 15
         platescale = 0.725
-        # Assumes the Nasymth port for the throughput; three
+        # Assumes the Nasmyth port for the throughput; three
         # reflections off an aluminum coating.
-        eta_file = str(data_file(filename='efficiency') / 'aluminum.db')
-        single_reflection = efficiency.Efficiency.from_file(eta_file)
+        eta_file = str(data_file(filename='efficiency') / 'avg_keck_reflectivity.db')
+        single_reflection = efficiency.Efficiency.from_file(eta_file, wave_units='nm')
         throughput = efficiency.CombinedEfficiency(dict([(key,single_reflection)
                                                          for key in ['m1', 'm2', 'm3']]))
-        super(KeckTelescope, self).__init__(155.47833, 19.82833, 4160.0, fratio, platescale,
-                                            throughput=throughput, area=723674.)
+        super().__init__(155.47833, 19.82833, 4160.0, fratio, platescale,
+                         throughput=throughput, area=723674.)
 
 
 class SDSSTelescope(Telescope):
@@ -124,8 +124,22 @@ class SDSSTelescope(Telescope):
     SDSS 2.5-meter telescope at Apache Point Observatory.
     """
     def __init__(self):
-        super(SDSSTelescope, self).__init__(105.82028, 32.78028, 2788.0, 5., 0.06048, diameter=2.5,
-                                            obstruction=0.286)
+        super().__init__(105.82028, 32.78028, 2788.0, 5., 0.06048, diameter=2.5, obstruction=0.286)
+
+
+class LickNickelTelescope(Telescope):
+    """
+    Nickel Telescope at Lick Observatory
+    """
+    def __init__(self):
+        fratio = 17
+        platescale = 0.0815
+        eta_file = str(data_file(filename='efficiency') / 'avg_keck_reflectivity.db')
+        single_reflection = efficiency.Efficiency.from_file(eta_file, wave_units='nm')
+        cassegrain_throughput = efficiency.CombinedEfficiency(dict([(key,single_reflection)
+                                                         for key in ['m1', 'm2']]))
+        super().__init__(121.64278, 37.34139, 1283.0, fratio, platescale,
+                         throughput=cassegrain_throughput, diameter=0.978, obstruction=0.12)
 
 
 class APFTelescope(Telescope):
@@ -133,8 +147,7 @@ class APFTelescope(Telescope):
     Automated Planet Finder telescope at Lick Observatory.
     """
     def __init__(self):
-        super(APFTelescope, self).__init__(121.64278, 37.34139, 1283.0, 15., 0.17452,
-                                           diameter=2.41, obstruction=0.02)
+        super().__init__(121.64278, 37.34139, 1283.0, 15., 0.17452, diameter=2.41, obstruction=0.02)
 
 
 class TMTTelescope(Telescope):
@@ -169,8 +182,8 @@ class TMTTelescope(Telescope):
         # Area is just taken as 30m diameter with a 10% obstruction
         # Plate scale is 1e3 * 15[f/] * 30 [m] / 206265 [arcsec/rad] = 2.182 [mm/arcsec]"""
         # Location is just taken to be the same as Keck.
-        super(TMTTelescope, self).__init__(155.47833, 19.82833, 4160.0, 15., 2.182,
-                                           throughput=throughput, diameter=30, obstruction=0.1)
+        super().__init__(155.47833, 19.82833, 4160.0, 15., 2.182,
+                         throughput=throughput, diameter=30, obstruction=0.1)
 
 
 #class Observation:

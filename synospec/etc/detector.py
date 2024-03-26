@@ -13,7 +13,7 @@ Detector class
 
 """
 
-import os
+from IPython import embed
 import numpy
 
 from .efficiency import Efficiency
@@ -90,9 +90,9 @@ class Detector(Efficiency):
         self.size = None if self.shape is None else self.shape*self.pixelsize*1e-3
         # Readnoise
         self.rn = rn
-        # Dark current per binned pixel
+        # Dark current per binned pixel per second
         self.dark = dark*self.binning**2
-        # Clock-induced charge per binned pixel
+        # Clock-induced charge per binned pixel per *exposure*
         self.cic = cic*self.binning**2
         self.gain = gain
         self.fullwell = fullwell
@@ -123,7 +123,7 @@ class Detector(Efficiency):
             _wave = numpy.full(_rate.shape, wave)
         if _wave.shape != _rate.shape:
             raise ValueError('Wavelength and flux array shapes must match.')
-        cnts = self(wave)*photon_rate
+        cnts = self(_wave)*_rate
         return cnts[0] if single_value else cnts
 
     # TODO: Add digitization noise?

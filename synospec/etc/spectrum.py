@@ -634,7 +634,7 @@ class Spectrum:
                 a WCS, but the data is organized in a binary table.
         """
         # Check the input
-        if waveext.lower() == 'wcs' and tblext is not None:
+        if isinstance(waveext, str) and waveext.lower() == 'wcs' and tblext is not None:
             raise ValueError('WCS cannot be used to define the wavelength coordinate system '
                              'using a binary table data model.')
         if ivarext is not None and errext is not None:
@@ -670,7 +670,7 @@ class Spectrum:
             error = error.data
 
         # Get the wavelength vector
-        if waveext.lower() == 'wcs':
+        if isinstance(waveext, str) and waveext.lower() == 'wcs':
             wave = Spectrum.wcs_wavelength_vector(WCS(header=hdu[fluxext].header, fix=True),
                                                   flux.size)
         else:
@@ -685,7 +685,7 @@ class Spectrum:
             elif 'BUNIT' in hdu[fluxext].header:
                 fluxunits = hdu[fluxext].header['BUNIT']
         if fluxunits is not None:
-            print('Converting flux units from {0} to 1e-17 erg/s/cm2/angstrom'.format(fluxunits))
+#            print('Converting flux units from {0} to 1e-17 erg/s/cm2/angstrom'.format(fluxunits))
             if error is None:
                 flux = convert_flux_units(wave, flux, fluxunits)
             else:
@@ -779,7 +779,7 @@ class Spectrum:
                 mask |= error.mask
             error = error.data
         if fluxunits is not None:
-            print('Converting flux units from {0} to 1e-17 erg/s/cm2/angstrom'.format(fluxunits))
+#            print('Converting flux units from {0} to 1e-17 erg/s/cm2/angstrom'.format(fluxunits))
             if error is None:
                 flux = convert_flux_units(wave, flux, fluxunits)
             else:
@@ -1246,7 +1246,7 @@ class EmissionLineSpectrum(Spectrum):
             spectrum += profile(pix, p)
 
         # Instantiate
-        super(EmissionLineSpectrum, self).__init__(wave, spectrum, resolution=_resolution, log=log)
+        super().__init__(wave, spectrum, resolution=_resolution, log=log)
 
 
 # 8329-6104
@@ -1259,7 +1259,7 @@ class BlueGalaxySpectrum(Spectrum):
         hdu = fits.open(fitsfile)
         wave = hdu['WAVE'].data * (1+redshift)
         flux = hdu['FLUX'].data
-        super(BlueGalaxySpectrum, self).__init__(wave, flux, log=True)
+        super().__init__(wave, flux, log=True)
 
     @classmethod
     def from_file(cls):
@@ -1276,7 +1276,7 @@ class RedGalaxySpectrum(Spectrum):
         hdu = fits.open(fitsfile)
         wave = hdu['WAVE'].data * (1+redshift)
         flux = hdu['FLUX'].data
-        super(RedGalaxySpectrum, self).__init__(wave, flux, log=True)
+        super().__init__(wave, flux, log=True)
 
     @classmethod
     def from_file(cls):
@@ -1313,7 +1313,35 @@ class MaunakeaSkySpectrum(Spectrum):
         flux = init.flux
         indx = numpy.invert(flux > 0) # & (wave < 3210)
         flux[indx] = numpy.median(flux[(wave > 3210) & (wave < 4000)])
-        super(MaunakeaSkySpectrum, self).__init__(wave, flux)
+        super().__init__(wave, flux)
+
+    @classmethod
+    def from_file(cls):
+        raise NotImplementedError('Maunakea sky spectrum is fixed.')
+
+
+class MtHamiltonSkySpectrum(Spectrum):
+    """
+    An empirical dark night-sky spectrum at Mt. Hamilton provided by X.
+    Prochaska/B. Holden.
+    """
+    def __init__(self):
+        fitsfile = str(data_file(filename='sky') / 'lick_sky_d55_2011aug29.fits.gz')
+        init = Spectrum.from_fits(fitsfile, waveext=0, fluxext=1, airwave=True,
+                                  use_sampling_assessments=True)
+        init.rescale(1e17)
+        init.regular = False
+        init.log = False
+
+        wave = numpy.arange(3160., 8315., 1.)
+        init = init.resample(wave=wave, dwave=1., log=False)
+        super().__init__(init.wave, init.flux)
+
+#        wave = init.wave
+#        flux = init.flux
+#        indx = numpy.invert(flux > 0) # & (wave < 3210)
+#        flux[indx] = numpy.median(flux[(wave > 3210) & (wave < 4000)])
+#        super().__init__(wave, flux)
 
     @classmethod
     def from_file(cls):
@@ -1342,8 +1370,7 @@ class ABReferenceSpectrum(Spectrum):
         norm = numpy.power(10., 29 - 48.6/2.5)  # Reference flux in microJanskys
         fnu = numpy.full_like(wave, norm, dtype=float)
         flambda = convert_flux_density(wave, fnu, density='Hz')
-        super(ABReferenceSpectrum, self).__init__(wave, flambda, resolution=resolution, log=log,
-                                                  regular=regular)
+        super().__init__(wave, flambda, resolution=resolution, log=log, regular=regular)
 
 
 class VegaSpectrum(Spectrum):
@@ -1369,7 +1396,6 @@ class VegaSpectrum(Spectrum):
                     else (hdu[1].data['WAVELENGTH'] > waverange[0]) \
                             & (hdu[1].data['WAVELENGTH'] < waverange[1])
         resolution=hdu[1].data['WAVELENGTH']/hdu[1].data['FWHM']
-        super(VegaSpectrum, self).__init__(hdu[1].data['WAVELENGTH'][indx],
-                                           hdu[1].data['FLUX'][indx]*1e17,
-                                           resolution=resolution[indx], regular=False)
+        super().__init__(hdu[1].data['WAVELENGTH'][indx], hdu[1].data['FLUX'][indx]*1e17,
+                         resolution=resolution[indx], regular=False)
 

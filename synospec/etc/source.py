@@ -53,14 +53,14 @@ class Source:
         self.sampling = None
         self.size = None
 
-    def __call__(self, x, y):
-        pass
-    
-    def minimum_sampling(self):
-        pass
-
-    def minimum_size(self):
-        pass
+#    def __call__(self, x, y):
+#        pass
+#    
+#    def minimum_sampling(self):
+#        pass
+#
+#    def minimum_size(self):
+#        pass
 
     def make_map(self, sampling=None, size=None):
         """

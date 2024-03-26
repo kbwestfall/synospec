@@ -1,6 +1,11 @@
 # Aluminum reflectance as a function of wavelength
 # Taken from Reni's TotalThroughput_FOBOS.xls file: 2 Apr 2020
+# Data from 0.29-0.31 and 1 - 1.1 micron is just a constant extension of
+# the values at either end!
+#   TODO: Need to get data for broader wavelength range.
 # Wavelength (angstrom)  Reflectivity
+  2900  0.9128
+  3000  0.9128
   3100  0.9128
   3200  0.9139
   3300  0.9144
@@ -71,3 +76,13 @@
   9800  0.9311
   9900  0.9343
  10000  0.9371
+ 10100  0.9371
+ 10200  0.9371
+ 10300  0.9371
+ 10400  0.9371
+ 10500  0.9371
+ 10600  0.9371
+ 10700  0.9371
+ 10800  0.9371
+ 10900  0.9371
+ 11000  0.9371

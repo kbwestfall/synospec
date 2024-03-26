@@ -300,7 +300,9 @@ class FilterResponse(Efficiency):
     """
     def __init__(self, band='g'):
 #        dfile = data_file(filename='broadband_filters') / f'gunn_2001_{band}_response.db'
-        dfile = data_file(filename='broadband_filters') / 'lsst' / f'{band}_band_Response.dat'
+#        dfile = data_file(filename='broadband_filters') / 'lsst' / f'{band}_band_Response.dat'
+        dfile = data_file(filename='broadband_filters') / 'asahi' \
+                    / f'super_{band}_asbuilt_convert.txt'
         if not dfile.is_file():
             raise FileNotFoundError(f'No file: {str(dfile)}')
         db = numpy.genfromtxt(str(dfile))
@@ -321,6 +323,11 @@ class AtmosphericThroughput(Efficiency):
     def __init__(self, airmass=1.0, location='maunakea'):
         if location == 'maunakea':
             dfile = data_file(filename='sky') / 'mauna_kea_extinction.db'
+            if not dfile.is_file():
+                raise FileNotFoundError(f'No file: {str(dfile)}')
+            db = numpy.genfromtxt(str(dfile))
+        elif location == 'mt_hamilton':
+            dfile = data_file(filename='sky') / 'mt_hamilton_extinction.db'
             if not dfile.is_file():
                 raise FileNotFoundError(f'No file: {str(dfile)}')
             db = numpy.genfromtxt(str(dfile))

@@ -534,8 +534,7 @@ class FiberAperture(Aperture):
 
 # A hack the just creates a pseudonym for the FiberAperture
 class CircularAperture(FiberAperture):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    pass
 
 
 class SlitAperture(Aperture):
