@@ -2,10 +2,8 @@
 Dynamically build the rst documentation with the script help text.
 """
 
-import os
 import time
-import importlib
-from pkg_resources import resource_filename
+from importlib import resources
 
 from synospec.scripts import script_classes
 
@@ -14,9 +12,9 @@ from synospec.scripts import script_classes
 
 def write_help(script_cls, opath, width=80):
     exe = script_cls.name()
-    ofile = os.path.join(opath, '{0}.rst'.format(exe))
+    ofile = opath / f'{exe}.rst'
     lines = ['.. code-block:: console', '']
-    lines += ['    $ {0} -h'.format(exe)]
+    lines += [f'    $ {exe} -h']
     parser = script_cls.get_parser(width=80)
     parser.prog = exe
     lines += ['    ' + l for l in parser.format_help().split('\n')]
@@ -27,14 +25,13 @@ def write_help(script_cls, opath, width=80):
 if __name__ == '__main__':
     t = time.perf_counter()
 
-    root = os.path.dirname(resource_filename('synospec', ''))
-    path = os.path.join(root, 'docs', 'help')
-    if not os.path.isdir(path):
-        os.makedirs(path)
+    root = resources.files('producer').parent
+    path = root / 'docs' / 'help'
+    if not path.is_dir():
+        path.mkdir(parents=True)
 
     # Get the list of script names and script classes
     scr_clss = script_classes()
-
     for name, script_cls in scr_clss.items():
         write_help(script_cls, path)
 

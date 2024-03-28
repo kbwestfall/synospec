@@ -7,7 +7,7 @@
     
     Grid sampling of FOBOS ETC
     
-    optional arguments:
+    options:
       -h, --help            show this help message and exit
       -w WAVELENGTHS WAVELENGTHS WAVELENGTHS, --wavelengths WAVELENGTHS WAVELENGTHS WAVELENGTHS
                             Wavelength grid: start wave, approx end wave,

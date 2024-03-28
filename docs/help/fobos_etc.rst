@@ -15,7 +15,7 @@
     
     FOBOS Exposure-Time Calculator (v0.2)
     
-    optional arguments:
+    options:
       -h, --help            show this help message and exit
       --spec_file SPEC_FILE
                             A fits or ascii file with the object spectrum to use

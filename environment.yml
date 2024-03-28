@@ -1,17 +1,18 @@
+# This is needed for tox.ini!!
 name: synospec
 channels:
-  - conda-forge
+  - defaults
 dependencies:
-  - python>=3.7
-  - IPython>=7.26
+  - python>=3.10
+  - IPython>=8.0
   - pip
-  - numpy>=1.21
-  - scipy>=1.7
-  - matplotlib>=3.4
-  - astropy>=4.3
+  - numpy>=1.24
+  - scipy>=1.10
+  - matplotlib>=3.6
+  - astropy>=6.0
   - extension-helpers>=0.1
   - pydl>=0.7
-  - shapely>=1.7.0
+  - shapely>=2.0
   - pytest>=6.2
   - setuptools>=46.4
 

@@ -7,7 +7,7 @@
     
     Imaging Exposure-Time Calculator
     
-    optional arguments:
+    options:
       -h, --help            show this help message and exit
       -m MAG, --mag MAG     Total apparent magnitude of the source (default: 24.0)
       --mag_band MAG_BAND   Broad-band used for the provided magnitude. Must be u,
