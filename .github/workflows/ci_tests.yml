@@ -18,13 +18,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python: [3.7, 3.8, 3.9]
-        toxenv: [test, test-alldeps-cov, test-astropydev, conda]
+        python: ['3.10', '3.11', '3.12']
+        toxenv: [test, test-alldeps-cov, test-astropydev]
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python }}
     - name: Install base dependencies
@@ -32,10 +32,10 @@ jobs:
         python -m pip install --upgrade pip tox
     - name: Test with tox
       run: |
-        tox -e ${{ matrix.toxenv }}
+        tox -e ${{ matrix.python }}-${{ matrix.toxenv }}
     - name: Upload coverage to codecov
       if: "contains(matrix.toxenv, '-cov')"
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV }}
         file: ./coverage.xml
@@ -49,13 +49,13 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, macos-latest]
-        python: [3.7, 3.8, 3.9]
+        python: ['3.10', '3.11', '3.12']
         toxenv: [test-alldeps]
     steps:
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python }}
     - name: Install base dependencies
@@ -63,16 +63,31 @@ jobs:
         python -m pip install --upgrade pip tox
     - name: Test with tox
       run: |
-        tox -e ${{ matrix.toxenv }}
+        tox -e ${{ matrix.python }}-${{ matrix.toxenv }}
+
+  conda:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Conda environment check
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    - name: Install base dependencies
+      run: |
+        python -m pip install --upgrade pip tox
+    - name: Run pypeit tests from environment built with conda
+      run: |
+        tox -e conda
 
   codestyle:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Python codestyle check
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
-        python-version: 3.9
+        python-version: '3.12'
     - name: Install base dependencies
       run: |
         python -m pip install --upgrade pip
