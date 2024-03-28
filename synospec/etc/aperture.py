@@ -19,7 +19,7 @@ import time
 
 from scipy import signal
 
-from shapely.geometry import Point, asPolygon
+from shapely.geometry import Point, Polygon
 from shapely.affinity import rotate
 
 def polygon_winding_number(polygon, point):
@@ -259,7 +259,7 @@ class Aperture:
             _img = indx.astype(float)
             intersect = numpy.any(inside_shape, axis=1) & numpy.invert(indx)
             _img[intersect] = numpy.array(list(map(lambda x:
-                                                    self.shape.intersection(asPolygon(x)).area,
+                                                    self.shape.intersection(Polygon(x)).area,
                                                 cells.reshape(-1,4,2)[intersect,...])))/cell_area
             img = numpy.zeros((len(y), len(x)), dtype=float)
             img[sy:ey,sx:ex] = _img.reshape(ey-sy,ex-sx)
@@ -360,7 +360,7 @@ class Aperture:
         cy = Y[:,None] + (numpy.array([-0.5,-0.5,0.5,0.5])*dy)[None,:]
 
         boxes = numpy.append(cx, cy, axis=1).reshape(-1,2,4).transpose(0,2,1)
-        polygons = [asPolygon(box) for box in boxes]
+        polygons = [Polygon(box) for box in boxes]
         
         return polygons, sx, ex, sy, ey
 
@@ -585,7 +585,7 @@ class SlitAperture(Aperture):
         self.rotation = rotation
         x = numpy.array([-width/2, width/2])+cx
         y = numpy.array([-length/2, length/2])+cy
-        square = asPolygon(numpy.append(numpy.roll(numpy.repeat(x,2),-1),
+        square = Polygon(numpy.append(numpy.roll(numpy.repeat(x,2),-1),
                                         numpy.repeat(y,2)).reshape(2,4).T)
         # rotate() function is provided by shapely.affinity package
         super(SlitAperture, self).__init__(rotate(square, rotation))
@@ -647,7 +647,7 @@ class HexagonalAperture(Aperture):
         hexv = hexagon_vertices(d=d, incircle=incircle)
         hexv[:,0] += cx
         hexv[:,1] += cy
-        hexv = asPolygon(hexv)
+        hexv = Polygon(hexv)
         # rotate() function is provided by shapely.affinity package
         super().__init__(rotate(hexv, self.rotation))
 
